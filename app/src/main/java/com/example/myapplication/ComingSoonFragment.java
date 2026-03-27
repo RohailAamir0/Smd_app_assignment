@@ -32,7 +32,7 @@ public class ComingSoonFragment extends Fragment {
 
         ArrayList<Movie> movies = new ArrayList<>();
         movies.add(new Movie("Oppenheimer", "Drama/History", "180 min",
-                R.drawable.onboarding, "https://www.youtube.com/watch?v=uYPbbksJxIg", true));
+                R.drawable.openheimer, "https://www.youtube.com/watch?v=uYPbbksJxIg", true));
         movies.add(new Movie("Dune: Part Two", "Sci-Fi", "166 min",
                 R.drawable.inception, "https://www.youtube.com/watch?v=Way9Dexny3w", true));
         movies.add(new Movie("Gladiator II", "Action", "148 min",
