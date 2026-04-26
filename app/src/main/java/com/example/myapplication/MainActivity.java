@@ -27,9 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Toast with tag "CineFAST" on launch
-        Toast toast = Toast.makeText(this, "Welcome to CineFAST!", Toast.LENGTH_SHORT);
-        toast.setTag("CineFAST");
-        toast.show();
+        Toast.makeText(this, "CineFAST", Toast.LENGTH_SHORT).show();
 
         sessionManager = new SessionManager(this);
 
