@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.util.SessionManager;
+
 public class Splash_activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,8 +19,14 @@ public class Splash_activity extends AppCompatActivity {
         logo.animate().alpha(1f).setDuration(2000);
 
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(Splash_activity.this, onboarding_activity.class));
+            SessionManager sessionManager = new SessionManager(Splash_activity.this);
+            if (sessionManager.isLoggedIn()) {
+                // Skip onboarding and login → go directly to MainActivity
+                startActivity(new Intent(Splash_activity.this, MainActivity.class));
+            } else {
+                startActivity(new Intent(Splash_activity.this, onboarding_activity.class));
+            }
             finish();
-        }, 5000);
+        }, 3000);
     }
 }

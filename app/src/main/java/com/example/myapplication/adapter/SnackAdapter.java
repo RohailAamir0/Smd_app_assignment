@@ -20,10 +20,10 @@ public class SnackAdapter extends BaseAdapter {
         void onQuantityChanged();
     }
 
-    private Context context;
-    private ArrayList<Snack> snacks;
-    private int[] quantities;
-    private OnQuantityChangeListener listener;
+    private final Context context;
+    private final ArrayList<Snack> snacks;
+    private final int[] quantities;
+    private final OnQuantityChangeListener listener;
 
     public SnackAdapter(Context context, ArrayList<Snack> snacks, OnQuantityChangeListener listener) {
         this.context = context;
@@ -65,13 +65,23 @@ public class SnackAdapter extends BaseAdapter {
         }
 
         Snack snack = snacks.get(position);
-        holder.imgSnack.setImageResource(snack.getImageResId());
+
+        // Resolve image: prefer imageResId, fall back to name-based lookup
+        if (snack.getImageResId() != 0) {
+            holder.imgSnack.setImageResource(snack.getImageResId());
+        } else if (snack.getImageName() != null && !snack.getImageName().isEmpty()) {
+            int resId = context.getResources().getIdentifier(
+                    snack.getImageName(), "drawable", context.getPackageName());
+            if (resId != 0) {
+                holder.imgSnack.setImageResource(resId);
+            }
+        }
+
         holder.tvName.setText(snack.getName());
         holder.tvDesc.setText(snack.getDescription());
         holder.tvPrice.setText("$" + snack.getPrice());
         holder.tvQty.setText(String.valueOf(quantities[position]));
 
-        // Use final copy of position for lambdas
         final int pos = position;
 
         holder.btnPlus.setOnClickListener(v -> {

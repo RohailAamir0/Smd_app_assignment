@@ -64,6 +64,8 @@ public class SeatSelectionFragment extends Fragment {
 
         Movie movie = (Movie) requireArguments().getSerializable("movie");
         String movieName = movie.getName();
+        String movieImage = movie.getImageName() != null && !movie.getImageName().isEmpty()
+                ? movie.getImageName() : "";
         String prefKey = "booked_seats_" + movieName.replaceAll("\\s+", "_");
 
         TextView txtMovieName = view.findViewById(R.id.txtMovieName);
@@ -141,13 +143,14 @@ public class SeatSelectionFragment extends Fragment {
                 prefs.edit().putStringSet(prefKey, updatedBooked).apply();
 
                 Toast.makeText(requireContext(), "Booking Confirmed!", Toast.LENGTH_SHORT).show();
-                navigateToTicketSummary(movieName, selectedSeats, selectedSeats * SEAT_PRICE, 0);
+                navigateToTicketSummary(movieName, movieImage, selectedSeats, selectedSeats * SEAT_PRICE, 0);
             });
 
             btnSnacks.setOnClickListener(v -> {
                 SnacksFragment fragment = new SnacksFragment();
                 Bundle args = new Bundle();
                 args.putString("movie_name", movieName);
+                args.putString("movie_image", movieImage);
                 args.putInt("seat_count", selectedSeats);
                 args.putInt("ticket_price", selectedSeats * SEAT_PRICE);
                 // Save booked seats before going to snacks
@@ -188,10 +191,11 @@ public class SeatSelectionFragment extends Fragment {
         if (btnSnacks != null) btnSnacks.setEnabled(selectedSeats > 0);
     }
 
-    private void navigateToTicketSummary(String movieName, int seats, int ticketPrice, int snacksPrice) {
+    private void navigateToTicketSummary(String movieName, String movieImage, int seats, int ticketPrice, int snacksPrice) {
         TicketSummaryFragment fragment = new TicketSummaryFragment();
         Bundle args = new Bundle();
         args.putString("movie_name", movieName);
+        args.putString("movie_image", movieImage);
         args.putInt("seat_count", seats);
         args.putInt("ticket_price", ticketPrice);
         args.putInt("snacks_price", snacksPrice);

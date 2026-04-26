@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.util.SessionManager;
+
 public class onboarding_activity extends AppCompatActivity {
 
     @Override
@@ -15,10 +17,10 @@ public class onboarding_activity extends AppCompatActivity {
         Button btnContinue = findViewById(R.id.btnContinue);
 
         btnContinue.setOnClickListener(v -> {
-            Intent intent = new Intent(onboarding_activity.this, MainActivity.class);
+            // Navigate to LoginActivity (not MainActivity directly)
+            Intent intent = new Intent(onboarding_activity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         });
     }
 }
-

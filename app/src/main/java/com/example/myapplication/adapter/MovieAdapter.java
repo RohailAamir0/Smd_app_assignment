@@ -24,9 +24,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         void onBookSeats(Movie movie);
     }
 
-    private Context context;
-    private ArrayList<Movie> movies;
-    private OnMovieClickListener listener;
+    private final Context context;
+    private final ArrayList<Movie> movies;
+    private final OnMovieClickListener listener;
 
     public MovieAdapter(Context context, ArrayList<Movie> movies, OnMovieClickListener listener) {
         this.context = context;
@@ -44,7 +44,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = movies.get(position);
-        holder.imgPoster.setImageResource(movie.getImageResId());
+
+        // Resolve image: prefer imageResId, fall back to name-based lookup
+        if (movie.getImageResId() != 0) {
+            holder.imgPoster.setImageResource(movie.getImageResId());
+        } else if (movie.getImageName() != null && !movie.getImageName().isEmpty()) {
+            int resId = context.getResources().getIdentifier(
+                    movie.getImageName(), "drawable", context.getPackageName());
+            if (resId != 0) {
+                holder.imgPoster.setImageResource(resId);
+            }
+        }
+
         holder.tvName.setText(movie.getName());
         holder.tvInfo.setText(movie.getGenre() + " / " + movie.getDuration());
 

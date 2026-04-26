@@ -1,0 +1,58 @@
+[
+  {
+    "name": "The Dark Knight",
+    "genre": "Action/Crime",
+    "duration": "152 min",
+    "image": "dark_knight",
+    "trailerUrl": "https://www.youtube.com/watch?v=EXeTwQWrcwY",
+    "isComingSoon": false
+  },
+  {
+    "name": "Inception",
+    "genre": "Sci-Fi",
+    "duration": "148 min",
+    "image": "inception",
+    "trailerUrl": "https://www.youtube.com/watch?v=YoHD9XEInc0",
+    "isComingSoon": false
+  },
+  {
+    "name": "Interstellar",
+    "genre": "Sci-Fi",
+    "duration": "169 min",
+    "image": "interstellar",
+    "trailerUrl": "https://www.youtube.com/watch?v=zSWdZVtXT7E",
+    "isComingSoon": false
+  },
+  {
+    "name": "The Shawshank Redemption",
+    "genre": "Drama",
+    "duration": "142 min",
+    "image": "shaw",
+    "trailerUrl": "https://www.youtube.com/watch?v=6hB3S9bIaco",
+    "isComingSoon": false
+  },
+  {
+    "name": "Oppenheimer",
+    "genre": "Drama/History",
+    "duration": "180 min",
+    "image": "openheimer",
+    "trailerUrl": "https://www.youtube.com/watch?v=uYPbbksJxIg",
+    "isComingSoon": true
+  },
+  {
+    "name": "Dune: Part Two",
+    "genre": "Sci-Fi",
+    "duration": "166 min",
+    "image": "inception",
+    "trailerUrl": "https://www.youtube.com/watch?v=Way9Dexny3w",
+    "isComingSoon": true
+  },
+  {
+    "name": "Gladiator II",
+    "genre": "Action",
+    "duration": "148 min",
+    "image": "interstellar",
+    "trailerUrl": "https://www.youtube.com/watch?v=f6UWlF0F90A",
+    "isComingSoon": true
+  }
+]

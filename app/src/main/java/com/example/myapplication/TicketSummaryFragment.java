@@ -15,6 +15,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.myapplication.util.SessionManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 public class TicketSummaryFragment extends Fragment {
 
     @Nullable
@@ -32,6 +43,7 @@ public class TicketSummaryFragment extends Fragment {
         int seats = requireArguments().getInt("seat_count", 0);
         int tPrice = requireArguments().getInt("ticket_price", 0);
         int sPrice = requireArguments().getInt("snacks_price", 0);
+        String movieImage = requireArguments().getString("movie_image", "");
         int total = tPrice + sPrice;
 
         // Populate views
@@ -42,7 +54,7 @@ public class TicketSummaryFragment extends Fragment {
         ((TextView) view.findViewById(R.id.txtSnackPrice)).setText(sPrice + " USD");
         ((TextView) view.findViewById(R.id.txtTotalPrice)).setText(total + " USD");
 
-        // Save to SharedPreferences (last booking info)
+        // Save to SharedPreferences (last booking — backward compat)
         SharedPreferences prefs = requireContext()
                 .getSharedPreferences("CineFAST_Prefs", 0);
         prefs.edit()
@@ -51,14 +63,17 @@ public class TicketSummaryFragment extends Fragment {
                 .putInt("last_total", total)
                 .apply();
 
+        // Save booking to Firebase Realtime Database
+        saveBookingToFirebase(movie, movieImage, seats, total);
+
         // Show booking confirmed toast
         Toast.makeText(requireContext(), "Booking Confirmed!", Toast.LENGTH_LONG).show();
 
-        // Back button → one step back
+        // Back button
         view.findViewById(R.id.btnBack).setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
-        // Done button → clear entire back stack and return to Home
+        // Done button
         view.findViewById(R.id.btnDone).setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager()
                         .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE));
@@ -93,5 +108,38 @@ public class TicketSummaryFragment extends Fragment {
                 Toast.makeText(requireContext(), "WhatsApp is not installed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void saveBookingToFirebase(String movieName, String movieImage, int seats, int totalPrice) {
+        try {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() == null) return;
+
+            String userId = auth.getCurrentUser().getUid();
+            DatabaseReference bookingsRef = FirebaseDatabase.getInstance()
+                    .getReference("bookings").child(userId);
+
+            // Generate booking ID
+            String bookingId = bookingsRef.push().getKey();
+            if (bookingId == null) return;
+
+            // Get current date/time
+            long timestamp = System.currentTimeMillis();
+            String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                    .format(new Date(timestamp));
+
+            // Build booking data
+            Map<String, Object> bookingData = new HashMap<>();
+            bookingData.put("movieName", movieName);
+            bookingData.put("movieImage", movieImage);
+            bookingData.put("seats", seats);
+            bookingData.put("totalPrice", totalPrice);
+            bookingData.put("dateTime", dateTime);
+            bookingData.put("timestamp", timestamp);
+
+            bookingsRef.child(bookingId).setValue(bookingData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

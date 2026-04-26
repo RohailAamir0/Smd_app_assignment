@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.adapter.MovieAdapter;
 import com.example.myapplication.model.Movie;
+import com.example.myapplication.util.MovieJsonParser;
 
 import java.util.ArrayList;
 
@@ -30,15 +31,8 @@ public class NowShowingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<Movie> movies = new ArrayList<>();
-        movies.add(new Movie("The Dark Knight", "Action/Crime", "152 min",
-                R.drawable.dark_knight, "https://www.youtube.com/watch?v=EXeTwQWrcwY", false));
-        movies.add(new Movie("Inception", "Sci-Fi", "148 min",
-                R.drawable.inception, "https://www.youtube.com/watch?v=YoHD9XEInc0", false));
-        movies.add(new Movie("Interstellar", "Sci-Fi", "169 min",
-                R.drawable.interstellar, "https://www.youtube.com/watch?v=zSWdZVtXT7E", false));
-        movies.add(new Movie("The Shawshank Redemption", "Drama", "142 min",
-                R.drawable.shaw, "https://www.youtube.com/watch?v=6hB3S9bIaco", false));
+        // Load movies from JSON asset (not hardcoded)
+        ArrayList<Movie> movies = MovieJsonParser.getNowShowing(requireContext());
 
         RecyclerView rv = view.findViewById(R.id.rvNowShowing);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));

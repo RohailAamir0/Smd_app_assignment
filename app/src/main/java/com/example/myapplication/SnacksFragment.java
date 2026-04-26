@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myapplication.adapter.SnackAdapter;
 import com.example.myapplication.model.Snack;
+import com.example.myapplication.util.SnackDatabaseHelper;
 
 import java.util.ArrayList;
 
@@ -36,15 +37,13 @@ public class SnacksFragment extends Fragment {
         String movie = requireArguments().getString("movie_name");
         int seats = requireArguments().getInt("seat_count", 0);
         int ticketPrice = requireArguments().getInt("ticket_price", 0);
+        String movieImage = requireArguments().getString("movie_image", "");
 
         txtTotal = view.findViewById(R.id.txtSnackTotal);
 
-        ArrayList<Snack> snacks = new ArrayList<>();
-        snacks.add(new Snack("Popcorn", "Large / Buttered", 8, R.drawable.snack_popcorn));
-        snacks.add(new Snack("Nachos", "With Cheese Dip", 8, R.drawable.snack_nachos));
-        snacks.add(new Snack("Soft Drink", "Large / Any Flavor", 6, R.drawable.snack_drink));
-        snacks.add(new Snack("Candy Mix", "Assorted Candies", 6, R.drawable.snack_candy));
-        snacks.add(new Snack("Hot Dog", "With Mustard", 7, R.drawable.snack_hotdog));
+        // Load snacks from SQLite database (not hardcoded)
+        SnackDatabaseHelper dbHelper = new SnackDatabaseHelper(requireContext());
+        ArrayList<Snack> snacks = dbHelper.getAllSnacks();
 
         adapter = new SnackAdapter(requireContext(), snacks, this::updateTotal);
 
@@ -60,6 +59,7 @@ public class SnacksFragment extends Fragment {
             args.putInt("seat_count", seats);
             args.putInt("ticket_price", ticketPrice);
             args.putInt("snacks_price", snacksTotal);
+            args.putString("movie_image", movieImage); // forward movie image
             fragment.setArguments(args);
 
             requireActivity().getSupportFragmentManager()
